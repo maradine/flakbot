@@ -35,7 +35,7 @@ class PropertiesManager {
 			System.out.println(ioe);
 			System.out.println("Halting");
 			System.exit(1);
-        }
+	        }
 	}
 
 }

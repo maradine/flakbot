@@ -123,12 +123,12 @@ public class TS3PresenceHandler implements SlackMessagePostedListener {
                 }
                 String toPrint = "";
                 ArrayList<String> ignores = pe.getIgnoreList();
-                for (PresenceState ps : pe.getPresenceState().values()) {
-                    if (!pe.shouldIgnore(ps.nickname)) {
+                for (PresenceTuple pt : pe.getPresenceState().values()) {
+                    if (!pe.shouldIgnore(pt.nickname)) {
                         if (!toPrint.equals("")) {
                             toPrint += ", ";
                         }
-                        toPrint += ps.nickname + "=" + ps.channel;
+                        toPrint += pt.nickname + "=" + pt.channel;
                     }
                 }
                 session.sendMessage(event.getChannel(),"Users: " + toPrint,null);

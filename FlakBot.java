@@ -42,7 +42,6 @@ public class FlakBot {
 		session.addMessagePostedListener(new TS3PresenceHandler(pe));
 
 
-
 		while (true){
 			try {
 				Thread.sleep(1000);
