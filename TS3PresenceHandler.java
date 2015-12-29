@@ -121,8 +121,37 @@ public class TS3PresenceHandler implements SlackMessagePostedListener {
                     pe.refreshClients();
                     this.lastRefresh = now;
                 }
-                String toPrint = "";
+				//ridiculous hackery to frame tuples by channel string
+				HashMap<String, ArrayList<String>> channelMap = new HashMap<String, ArrayList<String>>();
                 ArrayList<String> ignores = pe.getIgnoreList();
+				boolean fired = false;
+
+                for (PresenceTuple pt : pe.getPresenceState().values()) {
+                    String nick = pt.nickname;
+					String channel = pt.channel;
+					if (!pe.shouldIgnore(nick)) {
+						if (channelMap.containsKey(channel)) {
+							channelMap.get(channel).add(nick);
+						} else {
+							ArrayList<String> nicks = new ArrayList<String>();
+							nicks.add(nick);
+							channelMap.put(channel,nicks);
+						}
+					}
+				}
+				for (String channel : channelMap.keySet()) {
+                	String toPrint = "";
+					for (String nick : channelMap.get(channel)) {
+						toPrint += " " + nick;
+					}
+					session.sendMessage(event.getChannel(),"*"+channel+"* users:"+toPrint,null);
+					fired = true;
+				}
+				if (!fired) {
+					session.sendMessage(event.getChannel(),"http://giphy.com/gifs/metalocalypse-dethklok-nathan-explosion-S1XB4lqRgDW3S",null);
+				}
+
+				/* old string generator
                 for (PresenceTuple pt : pe.getPresenceState().values()) {
                     if (!pe.shouldIgnore(pt.nickname)) {
                         if (!toPrint.equals("")) {
@@ -131,7 +160,8 @@ public class TS3PresenceHandler implements SlackMessagePostedListener {
                         toPrint += pt.nickname + "=" + pt.channel;
                     }
                 }
-                session.sendMessage(event.getChannel(),"Users: " + toPrint,null);
+
+                session.sendMessage(event.getChannel(),"Users: " + toPrint,null);*/
             } else {
                 session.sendMessage(event.getChannel(),"Presence engine wasn't started, so I have no state to report.",null);
             }
