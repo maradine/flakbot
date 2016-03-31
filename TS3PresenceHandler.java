@@ -148,7 +148,8 @@ public class TS3PresenceHandler implements SlackMessagePostedListener {
 					fired = true;
 				}
 				if (!fired) {
-					session.sendMessage(event.getChannel(),"http://giphy.com/gifs/metalocalypse-dethklok-nathan-explosion-S1XB4lqRgDW3S",null);
+					//session.sendMessage(event.getChannel(),"http://giphy.com/gifs/metalocalypse-dethklok-nathan-explosion-S1XB4lqRgDW3S",null);
+					session.sendMessage(event.getChannel(),"http://www.mountainproject.com/images/43/67/107604367_medium_b82461.jpg",null);
 				}
 
 				/* old string generator

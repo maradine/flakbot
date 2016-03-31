@@ -51,6 +51,10 @@ class GeneralHandler implements SlackMessagePostedListener, Propertied {
 			//do we want to implement this?
 			
 			//permissions check
+	
+		} else if(token.equals("!topic")) {
+            session.sendMessage(event.getChannel(), "The topic is: " + event.getChannel().getTopic(), null);
+
 		}
 	}
 
