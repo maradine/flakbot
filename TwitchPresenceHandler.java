@@ -96,7 +96,7 @@ public class TwitchPresenceHandler implements SlackMessagePostedListener {
                     //
                     //
                     case "on": tpe.turnOn();
-                    session.sendMessage(event.getChannel(),"Twitch follwing turned ON.",null);
+                    session.sendMessage(event.getChannel(),"Twitch following turned ON.",null);
                     break;
                     //
                     case "off": tpe.turnOff();

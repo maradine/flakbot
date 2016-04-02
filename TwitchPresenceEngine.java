@@ -103,7 +103,8 @@ public class TwitchPresenceEngine implements Propertied,Runnable {
 				Thread.sleep(interval);
 				if (onSwitch) {
 	
-
+					System.out.println("\n***BEGINNING TWITCH PRESENCE ENGINE RUN() BLOCK***");	
+					
 					RequestParams params = new RequestParams();
 					String expandedFollows = "";
 					for (String s : followList) {
@@ -114,17 +115,22 @@ public class TwitchPresenceEngine implements Propertied,Runnable {
 					}
 
 					params.put("channel", expandedFollows);
-		
+					System.out.println("Placed params in request body: " + expandedFollows);	
+					System.out.println("Current state has "+activeStreams.size()+" active streams");
 					twitch.streams().get(params, new StreamsResponseHandler() {
 						@Override
 						public void onSuccess(int total, List<Stream> newStreams) {
 							//check new streams for presence in old streams, inate object equality via stream id.
 							//if it's not present in the old list, report it.
+							System.out.println("Received "+newStreams.size()+" active streams from API");
 							for (Stream ns : newStreams) {
 								boolean sayit = true;
+								System.out.println("====\nEvaluating new stream with id "+ns.getId()+" from user "+ns.getChannel().getName());
 								for (Stream as : activeStreams) {
+									System.out.println("Versus previous stream with id "+as.getId()+" from user "+as.getChannel().getName());
 									if (as.equals(ns)) {
 										sayit = false;
+										System.out.println("Match detected - not reporting to channel.");
 									}
 								}
 								if (sayit) {
@@ -133,22 +139,11 @@ public class TwitchPresenceEngine implements Propertied,Runnable {
 									String status = c.getStatus();
 									String url = c.getUrl();
 									session.sendMessage(channel, twitchName + " is now streaming \""+status+"\" from " + url, null);
+									System.out.println(twitchName + " is now streaming \""+status+"\" from " + url);
 								}
 							}
+							System.out.println("Swapping new state to current.");
 							activeStreams = newStreams;
-							
-						/*	System.out.println("I have "+total+" streams in the query");
-							for (Stream s : streams) {
-								//System.out.println(s);
-								Channel c = s.getChannel();
-								String twitchName = c.getName();
-								String status = c.getStatus();
-								String url = c.getUrl();
-								System.out.println(twitchName + " is streaming \""+status+"\" from " + url);
-							}
-						*/
-						
-						
 						
 						}
 
