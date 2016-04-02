@@ -41,11 +41,17 @@ public class FlakBot {
 		TS3PresenceEngine pe = new TS3PresenceEngine(session, channel);
 		session.addMessagePostedListener(new TS3PresenceHandler(pe));
 
+		TwitchPresenceEngine tpe = new TwitchPresenceEngine(session, channel);
+		Thread tpt = new Thread(tpe, "tpt");
+		tpt.start();
+		session.addMessagePostedListener(new TwitchPresenceHandler(tpe));
 
 		while (true){
 			try {
 				Thread.sleep(1000);
 			} catch (Exception e) {
+				System.out.println("I caught a main loop exception which makes no fuckign sense.");
+				System.out.println(e);
 			}
     	}
 	}

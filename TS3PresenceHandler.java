@@ -126,7 +126,7 @@ public class TS3PresenceHandler implements SlackMessagePostedListener {
                 ArrayList<String> ignores = pe.getIgnoreList();
 				boolean fired = false;
 
-                for (PresenceTuple pt : pe.getPresenceState().values()) {
+                for (TS3PresenceTuple pt : pe.getPresenceState().values()) {
                     String nick = pt.nickname;
 					String channel = pt.channel;
 					if (!pe.shouldIgnore(nick)) {
@@ -153,7 +153,7 @@ public class TS3PresenceHandler implements SlackMessagePostedListener {
 				}
 
 				/* old string generator
-                for (PresenceTuple pt : pe.getPresenceState().values()) {
+                for (TS3PresenceTuple pt : pe.getPresenceState().values()) {
                     if (!pe.shouldIgnore(pt.nickname)) {
                         if (!toPrint.equals("")) {
                             toPrint += ", ";

@@ -22,7 +22,7 @@ import com.github.theholywaffle.teamspeak3.api.event.TS3EventType;
 public class TS3PresenceEngine implements Propertied {
 
     private SlackSession session;
-	private HashMap<Integer,PresenceTuple> presenceState;
+	private HashMap<Integer,TS3PresenceTuple> presenceState;
     private SlackChannel channel;
     private boolean onSwitch;
     private boolean squelch;
@@ -34,7 +34,7 @@ public class TS3PresenceEngine implements Propertied {
 
     public TS3PresenceEngine(SlackSession session, SlackChannel channel) {
         this.session = session;
-		presenceState = new HashMap<Integer,PresenceTuple>();
+		presenceState = new HashMap<Integer,TS3PresenceTuple>();
         this.channel = channel;
 		propertiesName = this.getClass().getSimpleName();
 		props = loadPropertiesFromDisk(propertiesName);
@@ -60,7 +60,7 @@ public class TS3PresenceEngine implements Propertied {
 	}
 
 
-    public HashMap<Integer,PresenceTuple> getPresenceState() {
+    public HashMap<Integer,TS3PresenceTuple> getPresenceState() {
         return presenceState;
     }
 
@@ -133,7 +133,7 @@ public class TS3PresenceEngine implements Propertied {
     public void clientJoin(int clientID, String nickname, int channelID) {
         //System.out.println("CLIENT JOIN: " + clientID + " " + nickname + " " + channelID);
         String newChannel = this.api.getChannelInfo(channelID).getName();
-        presenceState.put(clientID, new PresenceTuple(nickname, newChannel));
+        presenceState.put(clientID, new TS3PresenceTuple(nickname, newChannel));
         if (!this.shouldIgnore(nickname)) {
         	session.sendMessage(channel, "["+nickname+"] has JOINED Channel "+newChannel+".", null);
         }
@@ -144,7 +144,7 @@ public class TS3PresenceEngine implements Propertied {
         String nickname = "";
         String newChannel = this.api.getChannelInfo(channelID).getName();
         if (presenceState.containsKey(clientID)) {
-            PresenceTuple ps = presenceState.get(clientID);
+            TS3PresenceTuple ps = presenceState.get(clientID);
             nickname = ps.nickname;
             String oldChannel = ps.channel;
             if (newChannel.equals(oldChannel)) {
@@ -153,7 +153,7 @@ public class TS3PresenceEngine implements Propertied {
         } else {
             return;
         }
-        presenceState.put(clientID, new PresenceTuple(nickname, newChannel));
+        presenceState.put(clientID, new TS3PresenceTuple(nickname, newChannel));
         if (!this.shouldIgnore(nickname)) {
             session.sendMessage(channel, "["+nickname+"] has MOVED to Channel "+newChannel+".", null);
         }
@@ -174,7 +174,7 @@ public class TS3PresenceEngine implements Propertied {
     public void refreshClients() {
         this.presenceState.clear();
         for (Client c : api.getClients()) {
-            presenceState.put(c.getId(), new PresenceTuple(c.getNickname(),
+            presenceState.put(c.getId(), new TS3PresenceTuple(c.getNickname(),
                 api.getChannelInfo(c.getChannelId()).getName()));
         }
     }
