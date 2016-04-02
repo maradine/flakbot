@@ -19,28 +19,28 @@ import com.mb3364.http.RequestParams;
 
 public class TwitchPresenceEngine implements Propertied,Runnable {
 
-    private SlackSession session;
+	private SlackSession session;
 	private List<Stream> activeStreams;
 	private List<String> followList;
-    private SlackChannel channel;
-    private boolean onSwitch;
-    public String propertiesName;
+	private SlackChannel channel;
+	private boolean onSwitch;
+	public String propertiesName;
 	private Properties props;
 	private long interval;
 	private long backoff;
 	private Twitch twitch;
 
-    public TwitchPresenceEngine(SlackSession session, SlackChannel channel) {
-        this.session = session;
+	public TwitchPresenceEngine(SlackSession session, SlackChannel channel) {
+		this.session = session;
 		activeStreams = new LinkedList<Stream>();
 		followList = new LinkedList<String>();
-        this.channel = channel;
+		this.channel = channel;
 		propertiesName = this.getClass().getSimpleName();
 		props = loadPropertiesFromDisk(propertiesName);
-        onSwitch = true;
+		onSwitch = true;
 		interval = 60000L;
 		backoff = 0L;
-        initTracks();
+		initTracks();
 		twitch = new Twitch();
     }
 	
@@ -55,27 +55,27 @@ public class TwitchPresenceEngine implements Propertied,Runnable {
 		return props;
 	}
 
-    public List<String> getFollowList() {
-        return followList;
-    }
+	public List<String> getFollowList() {
+		return followList;
+	}
 
-    public void purgeFollowList() {
-        followList = new LinkedList<String>();
-    }
+	public void purgeFollowList() {
+		followList = new LinkedList<String>();
+	}
 
-    private void initTracks() {
-        String rawFollows = props.getProperty("follow_list");
-        if (rawFollows != null && !rawFollows.isEmpty()) {
-            List<String> temptlist  = Arrays.asList(rawFollows.split("\\s*,\\s*"));
-            followList = new LinkedList<String>(temptlist);
-        } else {
-            followList = new LinkedList<String>();
-        }
-    }
+	private void initTracks() {
+		String rawFollows = props.getProperty("follow_list");
+		if (rawFollows != null && !rawFollows.isEmpty()) {
+			List<String> temptlist  = Arrays.asList(rawFollows.split("\\s*,\\s*"));
+			followList = new LinkedList<String>(temptlist);
+		} else {
+			followList = new LinkedList<String>();
+		}
+	}
 
-    public List<String> getTracks() {
-        return followList;
-    }
+	public List<String> getTracks() {
+		return followList;
+	}
 
 	public void setInterval(long set) {
 		interval = set;
@@ -85,17 +85,17 @@ public class TwitchPresenceEngine implements Propertied,Runnable {
 		return interval;
 	}
 
-    public void turnOn() {
-        onSwitch = true;
-    }
+	public void turnOn() {
+		onSwitch = true;
+	}
 
-    public void turnOff() {
-        onSwitch = false;
-    }
+	public void turnOff() {
+		onSwitch = false;
+	}
 
-    public Boolean isOn() {
-        return onSwitch;
-    }
+	public Boolean isOn() {
+		return onSwitch;
+	}
 
 	public void run() {
 		while (true) {
